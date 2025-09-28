@@ -93,7 +93,7 @@ output "lambda_config_mode" {
 output "security_enhancements_enabled" {
   description = "Map of enabled security enhancements."
   value = {
-    secrets_manager   = var.use_secrets_manager
+    secrets_manager  = var.use_secrets_manager
     vpc_config       = var.enable_vpc_config
     audit_logging    = var.enable_audit_logging
     kms_key_rotation = local.create_ssm_parameter
@@ -105,7 +105,7 @@ output "monitoring_enhancements_enabled" {
   value = {
     enhanced_monitoring = var.enable_enhanced_monitoring
     email_notifications = length(var.alarm_notification_emails) > 0
-    dashboard          = var.enable_enhanced_monitoring
-    custom_log_group   = var.enable_enhanced_monitoring
+    dashboard           = var.enable_enhanced_monitoring
+    custom_log_group    = var.enable_enhanced_monitoring
   }
 }

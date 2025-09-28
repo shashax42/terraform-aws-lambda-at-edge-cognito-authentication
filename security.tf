@@ -8,7 +8,7 @@ resource "aws_secretsmanager_secret" "lambda_secrets" {
   name                    = "${var.name}-lambda-edge-secrets"
   description             = "Sensitive configuration for Lambda@Edge Cognito authentication"
   recovery_window_in_days = var.secrets_recovery_window_days
-  
+
   tags = merge(var.tags, {
     Purpose = "Lambda@Edge Cognito Authentication"
     Module  = "terraform-aws-lambda-at-edge-cognito-authentication"
@@ -18,12 +18,12 @@ resource "aws_secretsmanager_secret" "lambda_secrets" {
 resource "aws_secretsmanager_secret_version" "lambda_secrets" {
   count     = var.use_secrets_manager ? 1 : 0
   secret_id = aws_secretsmanager_secret.lambda_secrets[0].id
-  
+
   secret_string = jsonencode({
     cognito_user_pool_app_client_secret = var.cognito_user_pool_app_client_secret
     # Add other sensitive values here as needed
   })
-  
+
   lifecycle {
     ignore_changes = [secret_string]
   }
@@ -35,7 +35,7 @@ resource "aws_kms_key" "enhanced_ssm_kms_key" {
   description             = "KMS key for ${var.name} Lambda@Edge SSM parameters with enhanced security"
   deletion_window_in_days = var.kms_deletion_window_days
   enable_key_rotation     = true
-  
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -67,7 +67,7 @@ resource "aws_kms_key" "enhanced_ssm_kms_key" {
       }
     ]
   })
-  
+
   tags = merge(var.tags, {
     Purpose = "Lambda@Edge SSM Parameter Encryption"
     Module  = "terraform-aws-lambda-at-edge-cognito-authentication"
@@ -116,14 +116,14 @@ resource "aws_security_group" "lambda_security_group" {
 resource "aws_cloudtrail" "lambda_audit_trail" {
   count                         = var.enable_audit_logging ? 1 : 0
   name                          = "${var.name}-lambda-edge-audit"
-  s3_bucket_name               = aws_s3_bucket.audit_logs[0].id
+  s3_bucket_name                = aws_s3_bucket.audit_logs[0].id
   include_global_service_events = true
-  is_multi_region_trail        = true
-  enable_logging               = true
+  is_multi_region_trail         = true
+  enable_logging                = true
 
   event_selector {
-    read_write_type                 = "All"
-    include_management_events       = true
+    read_write_type           = "All"
+    include_management_events = true
     data_resource {
       type   = "AWS::Lambda::Function"
       values = [aws_lambda_function.cloudfront_auth_edge.arn]

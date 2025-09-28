@@ -6,7 +6,7 @@
 resource "aws_sns_topic" "lambda_alerts" {
   count = var.enable_enhanced_monitoring && length(var.alarm_notification_emails) > 0 ? 1 : 0
   name  = "${var.name}-lambda-edge-alerts"
-  
+
   tags = merge(var.tags, {
     Purpose = "Lambda@Edge Alert Notifications"
     Module  = "terraform-aws-lambda-at-edge-cognito-authentication"
@@ -58,11 +58,11 @@ resource "aws_cloudwatch_dashboard" "lambda_edge_dashboard" {
             ["AWS/Lambda", "Errors", "FunctionName", aws_lambda_function.cloudfront_auth_edge.function_name],
             [".", "Invocations", ".", "."]
           ]
-          view    = "singleValue"
-          region  = "us-east-1"
-          title   = "Error Rate"
-          period  = 300
-          stat    = "Sum"
+          view   = "singleValue"
+          region = "us-east-1"
+          title  = "Error Rate"
+          period = 300
+          stat   = "Sum"
         }
       },
       {
@@ -72,10 +72,10 @@ resource "aws_cloudwatch_dashboard" "lambda_edge_dashboard" {
         width  = 24
         height = 6
         properties = {
-          query   = "SOURCE '/aws/lambda/us-east-1.${aws_lambda_function.cloudfront_auth_edge.function_name}'\n| fields @timestamp, @message\n| filter @message like /ERROR/\n| sort @timestamp desc\n| limit 100"
-          region  = "us-east-1"
-          title   = "Recent Errors"
-          view    = "table"
+          query  = "SOURCE '/aws/lambda/us-east-1.${aws_lambda_function.cloudfront_auth_edge.function_name}'\n| fields @timestamp, @message\n| filter @message like /ERROR/\n| sort @timestamp desc\n| limit 100"
+          region = "us-east-1"
+          title  = "Recent Errors"
+          view   = "table"
         }
       }
     ]
@@ -160,7 +160,7 @@ resource "aws_cloudwatch_log_group" "lambda_edge_logs" {
   count             = var.enable_enhanced_monitoring ? 1 : 0
   name              = "/aws/lambda/us-east-1.${aws_lambda_function.cloudfront_auth_edge.function_name}"
   retention_in_days = 14
-  
+
   tags = merge(var.tags, {
     Purpose = "Lambda@Edge Logs"
     Module  = "terraform-aws-lambda-at-edge-cognito-authentication"
@@ -202,9 +202,9 @@ EOF
 
 # X-Ray Tracing (optional)
 resource "aws_lambda_function" "cloudfront_auth_edge_with_tracing" {
-  count         = var.enable_enhanced_monitoring ? 0 : 0  # Disabled for now as Lambda@Edge has limitations
+  count         = var.enable_enhanced_monitoring ? 0 : 0 # Disabled for now as Lambda@Edge has limitations
   function_name = "${var.name}-edge-auth"
-  
+
   tracing_config {
     mode = "Active"
   }
