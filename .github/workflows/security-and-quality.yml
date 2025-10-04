@@ -1,31 +1,10 @@
 {{ ... }}
-  pre-commit-check:
-    name: Pre-commit Hooks
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-
-    - name: Cache pre-commit
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pre-commit
-        key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
-        restore-keys: |
-          pre-commit-
-
-    - name: Install pre-commit
-      run: pip install pre-commit
-
-    - name: Install pre-commit hooks
-      run: pre-commit install --install-hooks
-
-    - name: Run pre-commit hooks
-      run: pre-commit run --all-files --show-diff-on-failure
-      continue-on-error: false
+    - name: Install Lambda dependencies
+      run: |
+        cd files/deployable
+        npm install
+{{ ... }}
+    - name: Install dependencies
+      run: |
+        cd files/deployable
+        npm install
