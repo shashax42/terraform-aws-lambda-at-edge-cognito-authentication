@@ -4,20 +4,29 @@
   "description": "Cognito@Edge wrapper to clean up",
   "main": "index.js",
   "scripts": {
-    "postinstall": "esbuild index.js --bundle --minify --platform=node  --target=node20 --format=cjs --main-fields=module,main \"--external:@aws-sdk/*\" --outdir=dist"
+    "postinstall": "esbuild index.js --bundle --minify --platform=node  --target=node20 --format=cjs --main-fields=module,main \"--external:@aws-sdk/*\" --outdir=dist",
+    "audit-fix": "npm audit fix --force",
+    "security-check": "npm audit --audit-level high"
   },
   "author": "Ken Figueiredo",
   "license": "TOST",
   "devDependencies": {
-    "@aws-sdk/client-iam": "3.787.0",
-    "@aws-sdk/client-ssm": "3.787.0",
-    "@aws-sdk/client-sts": "3.787.0",
-    "esbuild": "0.25.2",
-    "patch-package": "8.0.0"
+    "@aws-sdk/client-iam": "^3.800.0",
+    "@aws-sdk/client-ssm": "^3.800.0",
+    "@aws-sdk/client-sts": "^3.800.0",
+    "esbuild": "^0.25.0",
+    "patch-package": "^8.0.0"
   },
   "dependencies": {
-    "cognito-at-edge": "1.5.3",
-    "node-cache": "5.1.2",
-    "pino": "9.6.0"
+    "cognito-at-edge": "^1.5.3",
+    "node-cache": "^5.1.2",
+    "pino": "^9.6.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "overrides": {
+    "semver": ">=7.5.2",
+    "word-wrap": ">=1.2.4"
   }
 }

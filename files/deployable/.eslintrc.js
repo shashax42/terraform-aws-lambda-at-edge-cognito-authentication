@@ -1,42 +1,54 @@
 module.exports = {
   env: {
-    browser: false,
-    es2021: true,
-    node: true
+    node: true,
+    es2022: true
   },
   extends: [
     'standard'
   ],
   parserOptions: {
-    ecmaVersion: 'latest',
+    ecmaVersion: 2022,
     sourceType: 'module'
   },
   rules: {
-    // Security rules
-    'no-eval': 'error',
-    'no-implied-eval': 'error',
-    'no-new-func': 'error',
-    'no-script-url': 'error',
+    // AWS Lambda@Edge specific rules
+    'no-console': 'warn', // Prefer structured logging
+    'no-process-exit': 'error', // Lambda handles process lifecycle
+    'no-sync': 'warn', // Prefer async operations
     
-    // Lambda@Edge specific rules
-    'no-console': 'warn', // CloudWatch logs are expensive
+    // Performance and best practices
     'prefer-const': 'error',
     'no-var': 'error',
+    'object-shorthand': 'error',
+    'prefer-arrow-callback': 'error',
+    'prefer-template': 'error',
     
-    // Performance rules for Lambda@Edge
-    'no-unused-vars': 'error',
-    'no-unreachable': 'error',
-    'no-duplicate-imports': 'error',
+    // Error handling
+    'handle-callback-err': 'error',
+    'no-throw-literal': 'error',
     
     // Code quality
     'complexity': ['warn', 10],
     'max-depth': ['warn', 4],
+    'max-len': ['warn', { code: 120 }],
     'max-lines-per-function': ['warn', 50],
-    'max-params': ['warn', 4],
     
-    // AWS Lambda@Edge constraints
-    'no-process-env': 'warn', // Environment variables have limitations in Lambda@Edge
-    'no-process-exit': 'error'
+    // Security
+    'no-eval': 'error',
+    'no-implied-eval': 'error',
+    'no-new-func': 'error'
+  },
+  globals: {
+    // AWS Lambda globals
+    exports: 'writable',
+    module: 'writable',
+    require: 'readonly',
+    process: 'readonly',
+    Buffer: 'readonly',
+    __dirname: 'readonly',
+    __filename: 'readonly',
+    global: 'readonly',
+    console: 'readonly'
   },
   overrides: [
     {
@@ -45,18 +57,8 @@ module.exports = {
         jest: true
       },
       rules: {
-        'no-console': 'off'
+        'max-lines-per-function': 'off'
       }
     }
-  ],
-  globals: {
-    // AWS Lambda@Edge globals
-    'exports': 'readonly',
-    'module': 'readonly',
-    'require': 'readonly',
-    '__dirname': 'readonly',
-    '__filename': 'readonly',
-    'Buffer': 'readonly',
-    'process': 'readonly'
-  }
+  ]
 }
